@@ -73,6 +73,7 @@ PRODUCT_PACKAGES += \
     hostapd \
     libnetcmdiface \
     wpa_supplicant \
+    MotoDoze \
     wpa_supplicant.conf
 
 # These are the hardware-specific features
