@@ -650,6 +650,20 @@
                  return true;
          }
          return false;
+--- a/frameworks/base/core/jni/AndroidRuntime.cpp
++++ b/frameworks/base/core/jni/AndroidRuntime.cpp
+@@ -698,6 +698,11 @@
+     if (strcmp(propBuf, "true") == 0) {
+       addOption("-XX:LowMemoryMode");
+     }
++    
++property_get("ro.optimize.bcm", propBuf, "");
++    if (strcmp(propBuf, "true") == 0) {
++      addOption("-XX:LowMemoryMode");
++    }    
+ 
+     parseRuntimeOption("dalvik.vm.gctype", gctypeOptsBuf, "-Xgc:");
+     parseRuntimeOption("dalvik.vm.backgroundgctype", backgroundgcOptsBuf, "-XX:BackgroundGC=");
 --- a/frameworks/base/telephony/java/android/telephony/TelephonyManager.java
 +++ b/frameworks/base/telephony/java/android/telephony/TelephonyManager.java
 @@ -3244,49 +3244,19 @@
