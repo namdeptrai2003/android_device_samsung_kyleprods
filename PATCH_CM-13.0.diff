@@ -13,13 +13,6 @@
  ccache =
  
  define mv-modules
-@@ -264,4 +268,4 @@
- 	$(transform-prebuilt-to-target)
- 
- ALL_PREBUILT += $(INSTALLED_KERNEL_TARGET)
--endif
-+endif
-\ No newline at end of file
 --- a/external/icu/icu4c/source/common/ucnv.c
 +++ b/external/icu/icu4c/source/common/ucnv.c
 @@ -2914,6 +2914,76 @@
@@ -99,13 +92,6 @@
  #endif
  
  /*
-@@ -2923,4 +2993,4 @@
-  * indent-tabs-mode: nil
-  * End:
-  *
-- */
-+ */
-\ No newline at end of file
 --- a/external/sepolicy/domain.te
 +++ b/external/sepolicy/domain.te
 @@ -235,7 +235,7 @@
@@ -117,13 +103,6 @@
  neverallow { domain -kernel -system_app } kernel:security setcheckreqprot;
  
  # No booleans in AOSP policy, so no need to ever set them.
-@@ -471,4 +471,4 @@
-   -shell
-   userdebug_or_eng(`-uncrypt')
-   -installd
--} shell_data_file:lnk_file read;
-+} shell_data_file:lnk_file read;
-\ No newline at end of file
 --- a/external/tinyalsa/include/tinyalsa/asoundlib.h
 +++ b/external/tinyalsa/include/tinyalsa/asoundlib.h
 @@ -241,6 +241,7 @@
@@ -134,13 +113,6 @@
  int pcm_stop(struct pcm *pcm);
  
  /* ioctl function for PCM driver */
-@@ -307,4 +308,4 @@
- }  /* extern "C" */
- #endif
- 
--#endif
-+#endif
-\ No newline at end of file
 --- a/external/tinyalsa/pcm.c
 +++ b/external/tinyalsa/pcm.c
 @@ -1026,6 +1026,12 @@
@@ -156,13 +128,6 @@
  
  int pcm_stop(struct pcm *pcm)
  {
-@@ -1302,4 +1308,4 @@
-     va_end(ap);
- 
-     return ioctl(pcm->fd, request, arg);
--}
-+}
-\ No newline at end of file
 --- a/frameworks/av/include/media/stagefright/ColorConverter.h
 +++ b/frameworks/av/include/media/stagefright/ColorConverter.h
 @@ -66,6 +66,9 @@
@@ -175,13 +140,6 @@
  
      status_t convertYUV420Planar(
              const BitmapParams &src, const BitmapParams &dst);
-@@ -85,4 +88,4 @@
- 
- }  // namespace android
- 
--#endif  // COLOR_CONVERTER_H_
-+#endif  // COLOR_CONVERTER_H_
-\ No newline at end of file
 --- a/frameworks/av/media/libstagefright/ACodec.cpp
 +++ b/frameworks/av/media/libstagefright/ACodec.cpp
 @@ -769,11 +769,11 @@
@@ -232,7 +190,7 @@
              mRotationDegrees,
              usage);
  }
-@@ -1665,13 +1682,13 @@
+@@ -1665,15 +1682,22 @@
              mInputMetadataType = kMetadataBufferTypeCameraSource;
          }
  
@@ -252,8 +210,17 @@
 +        //}
      }
  
++#ifdef HAWAII_HWC
++ else if (!strncmp(mComponentName.c_str(), "OMX.BRCM.vc1.decoder.", 21)) {
++ // We cannot trust the width/height from the message
++ // so just use 1920x1080 setMinBufferSize(kPortIndexInput, (1920 * 1080 * 3) / 2);
++     }
++#endif    
++
      int32_t prependSPSPPS = 0;
-@@ -2154,20 +2171,20 @@
+     if (encoder
+             && msg->findInt32("prepend-sps-pps-to-idr-frames", &prependSPSPPS)
+@@ -2154,20 +2178,20 @@
          err = setMinBufferSize(kPortIndexInput, 8192);  // XXX
      }
  
@@ -287,7 +254,7 @@
  
      mBaseOutputFormat = outputFormat;
  
-@@ -3833,6 +3850,19 @@
+@@ -3833,6 +3857,19 @@
      image.mNumPlanes = 0;
  
      const OMX_COLOR_FORMATTYPE fmt = params.eColorFormat;
@@ -307,7 +274,17 @@
      image.mWidth = params.nFrameWidth;
      image.mHeight = params.nFrameHeight;
  
-@@ -4009,7 +4039,18 @@
+@@ -4004,12 +4041,27 @@
+     if (err != OK) {
+         return err;
+     }
+-
++#ifdef HAWAII_HWC
++ if (strncmp(mComponentName.c_str(), "OMX.BRCM.vc1.encoder.", 21) != 0)
++ // Skip checking on vc4 encoder. It will return the incorrect
++ // port index, but correct parameters.
++#endif
+     if (def.eDir != (portIndex == kPortIndexOutput ? OMX_DirOutput : OMX_DirInput)) {
          ALOGE("unexpected dir: %s(%d) on %s port", asString(def.eDir), def.eDir, niceIndex);
          return BAD_VALUE;
      }
@@ -326,7 +303,7 @@
      switch (def.eDomain) {
          case OMX_PortDomainVideo:
          {
-@@ -6339,14 +6380,14 @@
+@@ -6339,14 +6391,14 @@
          }
      }
  
@@ -349,13 +326,6 @@
  
      return OK;
  }
-@@ -6867,4 +6908,4 @@
-     }
- }
- 
--}  // namespace android
-+}  // namespace android
-\ No newline at end of file
 --- a/frameworks/av/media/libstagefright/MPEG4Writer.cpp
 +++ b/frameworks/av/media/libstagefright/MPEG4Writer.cpp
 @@ -2293,8 +2293,8 @@
@@ -422,13 +392,6 @@
      }
  
      mOwner->trackProgressStatus(mTrackId, -1, err);
-@@ -3301,4 +3301,4 @@
-     endBox();
- }
- 
--}  // namespace android
-+}  // namespace android
-\ No newline at end of file
 --- a/frameworks/av/media/libstagefright/MediaBufferGroup.cpp
 +++ b/frameworks/av/media/libstagefright/MediaBufferGroup.cpp
 @@ -54,6 +54,12 @@
@@ -444,16 +407,39 @@
  
  status_t MediaBufferGroup::acquire_buffer(
          MediaBuffer **out, bool nonBlocking) {
-@@ -89,4 +95,4 @@
-     mCondition.signal();
- }
- 
--}  // namespace android
-+}  // namespace android
-\ No newline at end of file
 --- a/frameworks/av/media/libstagefright/OMXCodec.cpp
 +++ b/frameworks/av/media/libstagefright/OMXCodec.cpp
-@@ -1286,6 +1286,11 @@
+@@ -264,7 +264,9 @@
+     if (info->hasQuirk("output-buffers-are-unreadable")) {
+         quirks |= kOutputBuffersAreUnreadable;
+     }
+-
++    if (info->hasQuirk("requires-flush-before-shutdown")) {
++        quirks |= kRequiresFlushBeforeShutdown;
++ }
+     return quirks;
+ }
+ 
+@@ -655,6 +657,18 @@
+         setMinBufferSize(kPortIndexInput, (OMX_U32)maxInputSize);
+     }
+ 
++#ifdef HAWAII_HWC
++ else if (!strncmp(mComponentName, "OMX.BRCM.vc4.decoder.", 21)) {
++ int32_t width;
++ int32_t height;
++ if (meta->findInt32(kKeyWidth, &width) && meta->findInt32(kKeyHeight, &height)) {
++	 setMinBufferSize(kPortIndexInput, (width * height * 3) / 2);
++ } else {
++ ALOGE("Failed to set min buffer size");
++ }
++ 
++ }
++#endif
+     initOutputFormat(meta);
+ 
+     if (mNativeWindow != NULL
+@@ -1286,6 +1300,11 @@
          CHECK_EQ((int)format.eCompressionFormat, (int)OMX_VIDEO_CodingUnused);
  
          int32_t colorFormat;
@@ -465,7 +451,7 @@
          if (meta->findInt32(kKeyColorFormat, &colorFormat)
                  && colorFormat != OMX_COLOR_FormatUnused
                  && colorFormat != format.eColorFormat) {
-@@ -1298,6 +1303,10 @@
+@@ -1298,6 +1317,10 @@
                  if (format.eColorFormat == colorFormat) {
                      break;
                  }
@@ -476,7 +462,7 @@
              }
              if (format.eColorFormat != colorFormat) {
                  CODEC_LOGE("Color format %d is not supported", colorFormat);
-@@ -1780,12 +1789,29 @@
+@@ -1780,12 +1803,29 @@
      if (mFlags & kEnableGrallocUsageProtected) {
          usage |= GRALLOC_USAGE_PROTECTED;
      }
@@ -507,7 +493,7 @@
              rotationDegrees,
              usage | GRALLOC_USAGE_HW_TEXTURE | GRALLOC_USAGE_EXTERNAL_DISP);
      if (err != 0) {
-@@ -4396,7 +4422,14 @@
+@@ -4396,7 +4436,14 @@
                      }
                  }
                  if (!marked) {
@@ -523,13 +509,6 @@
                  }
              }
              caps->mColorFormats.push(portFormat.eColorFormat);
-@@ -4488,4 +4521,4 @@
-     return OK;
- }
- 
--}  // namespace android
-+}  // namespace android
-\ No newline at end of file
 --- a/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp
 +++ b/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp
 @@ -44,6 +44,7 @@
@@ -551,38 +530,10 @@
  
          case OMX_QCOM_COLOR_FormatYVU420SemiPlanar:
              err = convertQCOMYUV420SemiPlanar(src, dst);
-@@ -196,6 +201,71 @@
-     return OK;
- }
+@@ -159,6 +164,71 @@
  
-+status_t ColorConverter::convertYCbYCr(
-+        const BitmapParams &src, const BitmapParams &dst) {
-+        ALOGE("PATCH:ColorConverter:convertYCbYCr");
-+    // XXX Untested
-+
-+    uint8_t *kAdjustedClip = initClip();
-+
-+    if (!((src.mCropLeft & 1) == 0
-+        && src.cropWidth() == dst.cropWidth()
-+        && src.cropHeight() == dst.cropHeight())) {
-+        return ERROR_UNSUPPORTED;
-+    }
-+
-+    uint16_t *dst_ptr = (uint16_t *)dst.mBits
-+        + dst.mCropTop * dst.mWidth + dst.mCropLeft;
-+
-+    const uint8_t *src_ptr = (const uint8_t *)src.mBits
-+        + (src.mCropTop * dst.mWidth + src.mCropLeft) * 2;
-+
-+    for (size_t y = 0; y < src.cropHeight(); ++y) {
-+        for (size_t x = 0; x < src.cropWidth(); x += 2) {
-+            signed y1 = (signed)src_ptr[2 * x ] - 16;
-+            signed y2 = (signed)src_ptr[2 * x + 2] - 16;
-+            signed u = (signed)src_ptr[2 * x + 1] - 128;  
-+            signed v = (signed)src_ptr[2 * x + 3] - 128;
-+
-+            signed u_b = u * 517;
-+            signed u_g = -u * 100;            
+             signed u_b = u * 517;
+             signed u_g = -u * 100;
 +            signed v_g = -v * 208;
 +            signed v_r = v * 409;
 +
@@ -620,16 +571,37 @@
 +    return OK;
 +}
 +
- status_t ColorConverter::convertYUV420Planar(
-         const BitmapParams &src, const BitmapParams &dst) {
-     if (!((src.mCropLeft & 1) == 0
-@@ -521,4 +591,4 @@
-     return &mClip[-kClipMin];
- }
++status_t ColorConverter::convertYCbYCr(
++        const BitmapParams &src, const BitmapParams &dst) {
++        ALOGE("PATCH:ColorConverter:convertYCbYCr");
++    // XXX Untested
++
++    uint8_t *kAdjustedClip = initClip();
++
++    if (!((src.mCropLeft & 1) == 0
++        && src.cropWidth() == dst.cropWidth()
++        && src.cropHeight() == dst.cropHeight())) {
++        return ERROR_UNSUPPORTED;
++    }
++
++    uint16_t *dst_ptr = (uint16_t *)dst.mBits
++        + dst.mCropTop * dst.mWidth + dst.mCropLeft;
++
++    const uint8_t *src_ptr = (const uint8_t *)src.mBits
++        + (src.mCropTop * dst.mWidth + src.mCropLeft) * 2;
++
++    for (size_t y = 0; y < src.cropHeight(); ++y) {
++        for (size_t x = 0; x < src.cropWidth(); x += 2) {
++            signed y1 = (signed)src_ptr[2 * x ] - 16;
++            signed y2 = (signed)src_ptr[2 * x + 2] - 16;
++            signed u = (signed)src_ptr[2 * x + 1] - 128;  
++            signed v = (signed)src_ptr[2 * x + 3] - 128;
++
++            signed u_b = u * 517;
++            signed u_g = -u * 100;            
+             signed v_g = -v * 208;
+             signed v_r = v * 409;
  
--}  // namespace android
-+}  // namespace android
-\ No newline at end of file
 --- a/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp
 +++ b/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp
 @@ -374,6 +374,7 @@
@@ -648,13 +620,36 @@
          }
      }
  
-@@ -1026,4 +1028,4 @@
+--- a/frameworks/av/media/libstagefright/omx/OMXNodeInstance.cpp
++++ b/frameworks/av/media/libstagefright/omx/OMXNodeInstance.cpp
+@@ -882,10 +882,16 @@
      }
- }
  
--}  // namespace android
-+}  // namespace android
-\ No newline at end of file
+     if (def.format.video.eColorFormat != OMX_COLOR_FormatAndroidOpaque) {
+-        CLOGW("createInputSurface requires COLOR_FormatSurface "
++#ifdef HAWAII_HWC
++ // VC Encoder change OMX_COLOR_FormatAndroidOpaque to 0x7F000005
++ if (def.format.video.eColorFormat != 0x7F000005) {
++#endif        CLOGW("createInputSurface requires COLOR_FormatSurface "
+                 "(AndroidOpaque) color format instead of %s(%#x)",
+                 asString(def.format.video.eColorFormat), def.format.video.eColorFormat);
+         return INVALID_OPERATION;
++#ifdef HAWAII_HWC
++        }
++#endif        
+     }
+ 
+     uint32_t usageBits;
+--- a/frameworks/base/core/java/android/view/KeyEvent.java
++++ b/frameworks/base/core/java/android/view/KeyEvent.java
+@@ -1849,6 +1849,7 @@
+             case KeyEvent.KEYCODE_STEM_1:
+             case KeyEvent.KEYCODE_STEM_2:
+             case KeyEvent.KEYCODE_STEM_3:
++            case KeyEvent.KEYCODE_HOME:
+                 return true;
+         }
+         return false;
 --- a/frameworks/base/telephony/java/android/telephony/TelephonyManager.java
 +++ b/frameworks/base/telephony/java/android/telephony/TelephonyManager.java
 @@ -3244,49 +3244,19 @@
@@ -1187,7 +1182,7 @@
  // ---------------------------------------------------------------------------
  
  SurfaceFlinger::LayerVector::LayerVector() {
-@@ -3547,7 +3701,7 @@
+@@ -3547,11 +3701,12 @@
  
  }; // namespace android
  
@@ -1196,12 +1191,11 @@
  #if defined(__gl_h_)
  #error "don't include gl/gl.h in this file"
  #endif
-@@ -3555,3 +3709,4 @@
+ 
  #if defined(__gl2_h_)
  #error "don't include gl2/gl2.h in this file"
- #endif
 +#endif
-\ No newline at end of file
+ #endif
 --- a/frameworks/native/services/surfaceflinger/SurfaceFlinger.h
 +++ b/frameworks/native/services/surfaceflinger/SurfaceFlinger.h
 @@ -209,6 +209,13 @@
@@ -1321,6 +1315,29 @@
      userial_ioctl_init_bt_wake(vnd_userial.fd);
  #endif
  
+--- a/system/core/healthd/healthd_mode_charger.cpp
++++ b/system/core/healthd/healthd_mode_charger.cpp
+@@ -547,6 +547,12 @@
+                 kick_animation(charger->batt_anim);
+             }
+         }
++        } else {
++            if (key->pending) {
++ request_suspend(false);
++ 
++kick_animation(charger->batt_anim);
++            }        
+     }
+ 
+     key->pending = false;
+@@ -555,6 +561,7 @@
+ static void handle_input_state(struct charger *charger, int64_t now)
+ {
+     process_key(charger, KEY_POWER, now);
++    process_key(charger, KEY_HOME, now);
+ 
+     if (charger->next_key_check != -1 && now > charger->next_key_check)
+         charger->next_key_check = -1;
 --- a/system/core/include/utils/VectorImpl.h
 +++ b/system/core/include/utils/VectorImpl.h
 @@ -105,7 +105,19 @@
@@ -1414,13 +1431,6 @@
  }
  
  static void process_kernel_dt(void)
-@@ -1150,4 +1162,4 @@
-     }
- 
-     return 0;
--}
-+}
-\ No newline at end of file
 --- a/system/core/init/util.cpp
 +++ b/system/core/init/util.cpp
 @@ -401,6 +401,34 @@
