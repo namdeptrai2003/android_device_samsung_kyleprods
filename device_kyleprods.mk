@@ -79,6 +79,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.nocheckin=1
 
+#Optimization-ART
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.optimize.bcm=true
+
 # Wi-Fi
 PRODUCT_PACKAGES += \
     macloader \
