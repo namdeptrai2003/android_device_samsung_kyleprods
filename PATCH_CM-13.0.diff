@@ -2160,9 +2160,6 @@ diff -ur a/frameworks/av/media/libstagefright/OMXCodec.cpp b/frameworks/av/media
 +            }
          }
      }
- 
-
-
 diff -ur a/frameworks/av/media/libstagefright/MediaBufferGroup.cpp b/frameworks/av/media/libstagefright/MediaBufferGroup.cpp
 --- a/frameworks/av/media/libstagefright/MediaBufferGroup.cpp    2016-05-27 06:16:16.461305200 +0000
 +++ b/frameworks/av/media/libstagefright/MediaBufferGroup.cpp    2016-02-27 08:15:52.000000000 +0000
