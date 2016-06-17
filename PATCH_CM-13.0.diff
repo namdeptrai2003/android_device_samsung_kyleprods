@@ -2177,9 +2177,9 @@ diff -ur a/frameworks/av/media/libstagefright/OMXCodec.cpp b/frameworks/av/media
 +
  status_t MediaBufferGroup::acquire_buffer(
          MediaBuffer **out, bool nonBlocking) {
-     Mutex::Autolock autoLock(mLock);
---- a/packages/services/telephony/res/values/strings.xml
-+++ b/packages/services/telephony/res/values/strings.xml
+     Mutex::Autolock autoLock(mLock);     
+--- a/packages/services/Telephony/res/values/strings.xml
++++ b/packages/services/Telephony/res/values/strings.xml
 @@ -592,8 +592,8 @@
  
      <string name="network_lte">LTE (recommended)</string>
@@ -2198,8 +2198,8 @@ diff -ur a/frameworks/av/media/libstagefright/OMXCodec.cpp b/frameworks/av/media
 -</resources>
 +</resources>
 \ No newline at end of file
---- a/packages/services/telephony/src/com/android/phone/MobileNetworkSettings.java
-+++ b/packages/services/telephony/src/com/android/phone/MobileNetworkSettings.java
+--- a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java
++++ b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java
 @@ -1105,7 +1105,7 @@
              case Phone.NT_MODE_WCDMA_PREF:
                  if (!mIsGlobalCdma) {
