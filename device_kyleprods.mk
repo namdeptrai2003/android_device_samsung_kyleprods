@@ -67,13 +67,10 @@ PRODUCT_PACKAGES += \
     ebtables \
     ethertypes
 
-# Snap Camera
+# Message App
 PRODUCT_PACKAGES += \
-    Snap
+    messaging
 
-# Gello Browser
-PRODUCT_PACKAGES += \
-    Gello
 
 # KSM
 PRODUCT_PROPERTY_OVERRIDES += \
