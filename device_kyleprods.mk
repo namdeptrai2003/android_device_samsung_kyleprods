@@ -67,11 +67,6 @@ PRODUCT_PACKAGES += \
     ebtables \
     ethertypes
 
-# Message App
-PRODUCT_PACKAGES += \
-    messaging
-
-
 # KSM
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.ksm.default=1
