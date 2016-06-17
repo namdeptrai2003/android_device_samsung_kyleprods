@@ -2160,7 +2160,8 @@ diff -ur a/frameworks/av/media/libstagefright/OMXCodec.cpp b/frameworks/av/media
 +            }
          }
      }
-diff -ur a/frameworks/av/media/libstagefright/MediaBufferGroup.cpp b/frameworks/av/media/libstagefright/MediaBufferGroup.cpp
+     
+     
 --- a/frameworks/av/media/libstagefright/MediaBufferGroup.cpp    2016-05-27 06:16:16.461305200 +0000
 +++ b/frameworks/av/media/libstagefright/MediaBufferGroup.cpp    2016-02-27 08:15:52.000000000 +0000
 @@ -55,6 +55,13 @@
@@ -2177,3 +2178,41 @@ diff -ur a/frameworks/av/media/libstagefright/MediaBufferGroup.cpp b/frameworks/
  status_t MediaBufferGroup::acquire_buffer(
          MediaBuffer **out, bool nonBlocking) {
      Mutex::Autolock autoLock(mLock);
+--- a/packages/services/telephony/res/values/strings.xml
++++ b/packages/services/telephony/res/values/strings.xml
+@@ -592,8 +592,8 @@
+ 
+     <string name="network_lte">LTE (recommended)</string>
+     <string name="network_4G">4G (recommended)</string>
+-    <string name="network_3G" translatable="false">3G</string>
+-    <string name="network_2G" translatable="false">2G</string>
++    <string name="network_3G" translatable="false">3G only</string>
++    <string name="network_2G" translatable="false">2G only</string>
+     <string name="network_1x" translatable="false">1x</string>
+     <string name="network_global">Global</string>
+ 
+@@ -1308,4 +1308,4 @@
+         A SIM card has activated your service and updated your phone\'s roaming capabilities.
+     </string>
+ 
+-</resources>
++</resources>
+\ No newline at end of file
+--- a/packages/services/telephony/src/com/android/phone/MobileNetworkSettings.java
++++ b/packages/services/telephony/src/com/android/phone/MobileNetworkSettings.java
+@@ -1105,7 +1105,7 @@
+             case Phone.NT_MODE_WCDMA_PREF:
+                 if (!mIsGlobalCdma) {
+                     mButtonEnabledNetworks.setValue(
+-                            Integer.toString(Phone.NT_MODE_WCDMA_PREF));
++                            Integer.toString(Phone.NT_MODE_WCDMA_ONLY));
+                     mButtonEnabledNetworks.setSummary(R.string.network_3G);
+                 } else {
+                     mButtonEnabledNetworks.setValue(
+@@ -1349,4 +1349,4 @@
+         }
+         return false;
+     }
+-}
++}
+\ No newline at end of file     
