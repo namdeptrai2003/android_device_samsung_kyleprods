@@ -2180,18 +2180,34 @@ diff -ur a/frameworks/av/media/libstagefright/OMXCodec.cpp b/frameworks/av/media
      Mutex::Autolock autoLock(mLock);     
 --- a/packages/services/Telephony/res/values/strings.xml
 +++ b/packages/services/Telephony/res/values/strings.xml
-@@ -592,8 +592,8 @@
+@@ -592,8 +592,9 @@
  
      <string name="network_lte">LTE (recommended)</string>
      <string name="network_4G">4G (recommended)</string>
 -    <string name="network_3G" translatable="false">3G</string>
 -    <string name="network_2G" translatable="false">2G</string>
++    <string name="network_3G_2G" translatable="false">3G-2G Preffered</string>
 +    <string name="network_3G" translatable="false">3G only</string>
 +    <string name="network_2G" translatable="false">2G only</string>
      <string name="network_1x" translatable="false">1x</string>
      <string name="network_global">Global</string>
  
-@@ -1308,4 +1308,4 @@
+@@ -612,11 +613,13 @@
+ 
+     <string-array name="enabled_networks_except_lte_choices" translatable="false">
+         <item>@string/network_3G</item>
++        <item>@string/network_3G_2G</item>
+         <item>@string/network_2G</item>
+     </string-array>
+     <string-array name="enabled_networks_except_lte_values" translatable="false">
+-        <item>"0"</item>
+         <item>"1"</item>
++        <item>"0"</item>
++        <item>"2"</item>
+     </string-array>
+ 
+     <string-array name="enabled_networks_except_gsm_lte_choices" translatable="false">
+@@ -1308,4 +1311,4 @@
          A SIM card has activated your service and updated your phone\'s roaming capabilities.
      </string>
  
@@ -2200,16 +2216,94 @@ diff -ur a/frameworks/av/media/libstagefright/OMXCodec.cpp b/frameworks/av/media
 \ No newline at end of file
 --- a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java
 +++ b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java
-@@ -1105,7 +1105,7 @@
+@@ -731,8 +731,7 @@
+         UpdatePreferredNetworkModeSummary(settingsNetworkMode);
+         UpdateEnabledNetworksValueAndSummary(settingsNetworkMode);
+         // Display preferred network type based on what modem returns b/18676277
+-        mPhone.setPreferredNetworkType(settingsNetworkMode, mHandler
+-                .obtainMessage(MyHandler.MESSAGE_SET_PREFERRED_NETWORK_TYPE));
++        mPhone.getPreferredNetworkType(mHandler.obtainMessage(MyHandler.MESSAGE_GET_PREFERRED_NETWORK_TYPE));
+ 
+         /**
+          * Enable/disable depending upon if there are any active subscriptions.
+@@ -936,7 +935,7 @@
+             return true;
+         }
+ 
+-        updateBody();
++        
+         // always let the preference setting proceed.
+         return true;
+     }
+@@ -944,6 +943,7 @@
+     private class MyHandler extends Handler {
+ 
+         static final int MESSAGE_SET_PREFERRED_NETWORK_TYPE = 0;
++        static final int MESSAGE_GET_PREFERRED_NETWORK_TYPE = 1;
+ 
+         @Override
+         public void handleMessage(Message msg) {
+@@ -951,6 +951,9 @@
+                 case MESSAGE_SET_PREFERRED_NETWORK_TYPE:
+                     handleSetPreferredNetworkTypeResponse(msg);
+                     break;
++                 case MESSAGE_GET_PREFERRED_NETWORK_TYPE:
++                    handleGetPreferredNetworkTypeResponse(msg);
++                    break;
+             }
+         }
+ 
+@@ -981,6 +984,28 @@
+                 updatePreferredNetworkUIFromDb();
+             }
+         }
++
++        private void handleGetPreferredNetworkTypeResponse(Message msg) {
++            AsyncResult ar = (AsyncResult) msg.obj;
++            final int phoneSubId = mPhone.getSubId();
++
++            if (ar.exception == null) {
++                int networkMode = ((int[]) ar.result)[0];
++
++                // Store this in setting so onPreferenceChange would trigger even if
++                // network mode from modem does not equal saved network mode
++                android.provider.Settings.Global.putInt(mPhone.getContext().getContentResolver(),
++                        android.provider.Settings.Global.PREFERRED_NETWORK_MODE + phoneSubId,
++                        networkMode );
++
++                UpdatePreferredNetworkModeSummary(networkMode);
++                UpdateEnabledNetworksValueAndSummary(networkMode);
++            } else {
++                if (DBG) {
++                    log("handleGetPreferredNetworkTypeResponse: exception in geting network mode.");
++                }
++            }
++        }
+     }
+ 
+     private void updatePreferredNetworkUIFromDb() {
+@@ -1100,12 +1125,18 @@
+                         Integer.toString(Phone.NT_MODE_TDSCDMA_GSM_WCDMA));
+                 mButtonEnabledNetworks.setSummary(R.string.network_3G);
+                 break;
+-            case Phone.NT_MODE_WCDMA_ONLY:
+-            case Phone.NT_MODE_GSM_UMTS:
              case Phone.NT_MODE_WCDMA_PREF:
                  if (!mIsGlobalCdma) {
                      mButtonEnabledNetworks.setValue(
--                            Integer.toString(Phone.NT_MODE_WCDMA_PREF));
+                             Integer.toString(Phone.NT_MODE_WCDMA_PREF));
++                    mButtonEnabledNetworks.setSummary(R.string.network_3G_2G);
++                } 
++                break;
++            case Phone.NT_MODE_WCDMA_ONLY:
++            case Phone.NT_MODE_GSM_UMTS:
++                if (!mIsGlobalCdma) {
++                    mButtonEnabledNetworks.setValue(
 +                            Integer.toString(Phone.NT_MODE_WCDMA_ONLY));
                      mButtonEnabledNetworks.setSummary(R.string.network_3G);
                  } else {
                      mButtonEnabledNetworks.setValue(
-@@ -1349,4 +1349,4 @@
+@@ -1349,4 +1380,4 @@
          }
          return false;
      }
