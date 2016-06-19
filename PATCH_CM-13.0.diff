@@ -2186,7 +2186,7 @@ diff -ur a/frameworks/av/media/libstagefright/OMXCodec.cpp b/frameworks/av/media
      <string name="network_4G">4G (recommended)</string>
 -    <string name="network_3G" translatable="false">3G</string>
 -    <string name="network_2G" translatable="false">2G</string>
-+    <string name="network_3G_2G" translatable="false">3G-2G Preffered</string>
++    <string name="network_3G_2G" translatable="false">3G/2G Preffered</string>
 +    <string name="network_3G" translatable="false">3G only</string>
 +    <string name="network_2G" translatable="false">2G only</string>
      <string name="network_1x" translatable="false">1x</string>
@@ -2226,7 +2226,15 @@ diff -ur a/frameworks/av/media/libstagefright/OMXCodec.cpp b/frameworks/av/media
  
          /**
           * Enable/disable depending upon if there are any active subscriptions.
-@@ -936,7 +935,7 @@
+@@ -871,6 +870,7 @@
+                 // if new mode is invalid ignore it
+                 switch (buttonNetworkMode) {
+                     case Phone.NT_MODE_WCDMA_PREF:
++                    case Phone.NT_MODE_WCDMA_ONLY:
+                     case Phone.NT_MODE_GSM_ONLY:
+                     case Phone.NT_MODE_LTE_GSM_WCDMA:
+                     case Phone.NT_MODE_LTE_CDMA_EVDO_GSM_WCDMA:
+@@ -936,7 +936,7 @@
              return true;
          }
  
@@ -2235,7 +2243,7 @@ diff -ur a/frameworks/av/media/libstagefright/OMXCodec.cpp b/frameworks/av/media
          // always let the preference setting proceed.
          return true;
      }
-@@ -944,6 +943,7 @@
+@@ -944,6 +944,7 @@
      private class MyHandler extends Handler {
  
          static final int MESSAGE_SET_PREFERRED_NETWORK_TYPE = 0;
@@ -2243,7 +2251,7 @@ diff -ur a/frameworks/av/media/libstagefright/OMXCodec.cpp b/frameworks/av/media
  
          @Override
          public void handleMessage(Message msg) {
-@@ -951,6 +951,9 @@
+@@ -951,6 +952,9 @@
                  case MESSAGE_SET_PREFERRED_NETWORK_TYPE:
                      handleSetPreferredNetworkTypeResponse(msg);
                      break;
@@ -2253,7 +2261,7 @@ diff -ur a/frameworks/av/media/libstagefright/OMXCodec.cpp b/frameworks/av/media
              }
          }
  
-@@ -981,6 +984,28 @@
+@@ -981,6 +985,28 @@
                  updatePreferredNetworkUIFromDb();
              }
          }
@@ -2282,7 +2290,7 @@ diff -ur a/frameworks/av/media/libstagefright/OMXCodec.cpp b/frameworks/av/media
      }
  
      private void updatePreferredNetworkUIFromDb() {
-@@ -1100,12 +1125,18 @@
+@@ -1100,12 +1126,17 @@
                          Integer.toString(Phone.NT_MODE_TDSCDMA_GSM_WCDMA));
                  mButtonEnabledNetworks.setSummary(R.string.network_3G);
                  break;
@@ -2296,7 +2304,6 @@ diff -ur a/frameworks/av/media/libstagefright/OMXCodec.cpp b/frameworks/av/media
 +                } 
 +                break;
 +            case Phone.NT_MODE_WCDMA_ONLY:
-+            case Phone.NT_MODE_GSM_UMTS:
 +                if (!mIsGlobalCdma) {
 +                    mButtonEnabledNetworks.setValue(
 +                            Integer.toString(Phone.NT_MODE_WCDMA_ONLY));
