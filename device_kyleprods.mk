@@ -47,6 +47,11 @@ PRODUCT_PACKAGES += \
     libstlport \
     libglgps-compat
 
+# Music Player
+PRODUCT_PACKAGES += \
+    MusicFX \
+    Music
+
 # USB accessory
 PRODUCT_PACKAGES += \
     com.android.future.usb.accessory
