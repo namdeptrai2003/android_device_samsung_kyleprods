@@ -2314,3 +2314,52 @@ diff -ur a/frameworks/av/media/libstagefright/OMXCodec.cpp b/frameworks/av/media
 -}
 +}
 \ No newline at end of file     
+--- a/frameworks/base/services/core/java/com/android/server/pm/PackageManagerService.java
++++ b/frameworks/base/services/core/java/com/android/server/pm/PackageManagerService.java
+@@ -6263,23 +6263,22 @@ private void performBootDexOpt(PackageParser.Package pkg, int curr, int total) {
+         if (DEBUG_DEXOPT) {
+             Log.i(TAG, "Optimizing app " + curr + " of " + total + ": " + pkg.packageName);
+         }
+-        if (!isFirstBoot()) {
++        try {
++            // give the packagename to the PhoneWindowManager
++            ApplicationInfo ai;
+             try {
+-                // give the packagename to the PhoneWindowManager
+-                ApplicationInfo ai;
+-                try {
+-                    ai = mContext.getPackageManager().getApplicationInfo(pkg.packageName, 0);
+-                } catch (Exception e) {
+-                    ai = null;
+-                }
+-                mPolicy.setPackageName((String) (ai != null ? mContext.getPackageManager().getApplicationLabel(ai) : pkg.packageName));
+-
+-                ActivityManagerNative.getDefault().showBootMessage(
+-                        mContext.getResources().getString(R.string.android_upgrading_apk,
+-                                curr, total), true);
+-            } catch (RemoteException e) {
++                ai = mContext.getPackageManager().getApplicationInfo(pkg.packageName, 0);
++            } catch (Exception e) {
++                ai = null;
+             }
++            mPolicy.setPackageName((String) (ai != null ? mContext.getPackageManager().getApplicationLabel(ai) : pkg.packageName));
++
++            ActivityManagerNative.getDefault().showBootMessage(
++                    mContext.getResources().getString(R.string.android_upgrading_apk,
++                            curr, total), true);
++        } catch (RemoteException e) {
+         }
++
+         PackageParser.Package p = pkg;
+         synchronized (mInstallLock) {
+             mPackageDexOptimizer.performDexOpt(p, null /* instruction sets */,
+--- a/frameworks/base/services/java/com/android/server/SystemServer.java
++++ b/frameworks/base/services/java/com/android/server/SystemServer.java
+@@ -508,7 +508,7 @@ private void startOtherServices() {
+             Slog.i(TAG, "Window Manager");
+             wm = WindowManagerService.main(context, inputManager,
+                     mFactoryTestMode != FactoryTest.FACTORY_TEST_LOW_LEVEL,
+-                    !mFirstBoot, mOnlyCore);
++                    true, mOnlyCore);
+             ServiceManager.addService(Context.WINDOW_SERVICE, wm);
+             ServiceManager.addService(Context.INPUT_SERVICE, inputManager);
