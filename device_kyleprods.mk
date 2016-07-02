@@ -80,6 +80,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.nocheckin=1
 
+# CM Actions(MotoDoze)
+PRODUCT_PACKAGES += \
+    CMActions
+
 #Optimization-ART
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.optimize.bcm=true
