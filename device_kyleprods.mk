@@ -127,6 +127,16 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # ART
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-flags=--no-watch-dog
+    
+# Performance,Memory & UI tweaks
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.min.fling_velocity=8000
+    ro.min_pointer_dur=8
+    windowsmgr.max_events_per_sec=150
+    debug.performance.tuning=1
+    ro.sys.fw.bg_apps_limit=10
+    ro.config.max_starting_bg=6
+        
 
 # Use Awesomeplayer
 PRODUCT_PROPERTY_OVERRIDES += \
