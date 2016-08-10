@@ -1,21 +1,23 @@
-$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
-
-$(call inherit-product-if-exists, vendor/samsung/kyleproxx/kyleproxx-common-vendor.mk)
+$(call inherit-product, vendor/samsung/kyleproxx/kyleproxx-common-vendor.mk)
 
 PRODUCT_LOCALES += hdpi
 PRODUCT_AAPT_CONFIG := normal hdpi xhdpi
 PRODUCT_AAPT_PREF_CONFIG := hdpi
 
-DEVICE_PACKAGE_OVERLAYS += device/samsung/kyleprods/overlay
+DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+
+# Boot animation
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/bootanimation/bootanimation.zip:system/media/bootanimation.zip
 
 # Init files
 PRODUCT_COPY_FILES += \
-    device/samsung/kyleprods/rootdir/fstab.hawaii_ss_kyleprods:root/fstab.hawaii_ss_kyleprods \
-    device/samsung/kyleprods/rootdir/init.rc:root/init.rc \
-    device/samsung/kyleprods/rootdir/init.hawaii_ss_kyleprods.rc:root/init.hawaii_ss_kyleprods.rc \
-    device/samsung/kyleprods/rootdir/init.bcm2166x.usb.rc:root/init.bcm2166x.usb.rc \
-    device/samsung/kyleprods/rootdir/init.log.rc:root/init.log.rc \
-    device/samsung/kyleprods/rootdir/ueventd.hawaii_ss_kyleprods.rc:root/ueventd.hawaii_ss_kyleprods.rc
+    $(LOCAL_PATH)/rootdir/fstab.hawaii_ss_kylepro:root/fstab.hawaii_ss_kylepro \
+    $(LOCAL_PATH)/rootdir/init.rc:root/init.rc \
+    $(LOCAL_PATH)/rootdir/init.hawaii_ss_kylepro.rc:root/init.hawaii_ss_kylepro.rc \
+    $(LOCAL_PATH)/rootdir/init.bcm2166x.usb.rc:root/init.bcm2166x.usb.rc \
+    $(LOCAL_PATH)/rootdir/init.log.rc:root/init.log.rc \
+    $(LOCAL_PATH)/rootdir/ueventd.hawaii_ss_kylepro.rc:root/ueventd.hawaii_ss_kylepro.rc
 
 # Google's Software Decoder.
 PRODUCT_COPY_FILES += \
@@ -25,27 +27,26 @@ PRODUCT_COPY_FILES += \
 
 # Configs
 PRODUCT_COPY_FILES += \
-    device/samsung/kyleprods/configs/media_codecs.xml:system/etc/media_codecs.xml
+    $(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml
+    $(LOCAL_PATH)/configs/media_codecs_ffmpeg.xml:system/etc/media_codecs_ffmpeg.xml
 
 # Insecure ADB
 ADDITIONAL_DEFAULT_PROPERTIES += \
     ro.secure=0 \
     ro.adb.secure=0 \
 
-# Filesystem management tools
-PRODUCT_PACKAGES += \
-    make_ext4fs \
-    e2fsck \
-    setup_fs
-
 # GPS/RIL
 PRODUCT_PACKAGES += \
     libstlport \
     libglgps-compat
 
-# USB accessory
+# Packages
 PRODUCT_PACKAGES += \
-    com.android.future.usb.accessory
+    CellBroadcastReceiver \
+    charger_res_images \
+    Launcher3 \
+    SoundRecorder \
+    Stk
 
 # Misc other modules
 PRODUCT_PACKAGES += \
@@ -55,7 +56,6 @@ PRODUCT_PACKAGES += \
     audio.primary.default \
     libaudio-resampler \
     lights.hawaii \
-    power.hawaii \
     libstagefrighthw
 
 # IPv6 tethering
@@ -99,6 +99,10 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
     frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml
 
+# Backup Services whitelist
+PRODUCT_COPY_FILES += \
+    $(COMMON_PATH)/configs/backup.xml:system/etc/sysconfig/backup.xml
+
 # These are the hardware-specific settings that are stored in system properties.
 # Note that the only such settings should be the ones that are too low-level to
 # be reachable from resources or other mechanisms
@@ -106,12 +110,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \
     mobiledata.interfaces=rmnet0 \
     ro.telephony.ril_class=SamsungBCMRIL \
-    persist.radio.multisim.config=dsds \
-    ro.multisim.simslotcount=2 \
+    persist.radio.multisim.config=none \
+    ro.multisim.simslotcount=1 \
     cm.updater.uri=http://ota.sandpox.org/api \
     ro.telephony.call_ring.multiple=0 \
     camera2.portability.force_api=1 \
-    ro.telephony.call_ring=0
+    ro.telephony.call_ring=0 \
+    ro.build.selinux=1 \
 
 # Enable Google-specific location features,
 # like NetworkLocationProvider and LocationCollector
@@ -131,25 +136,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # ART
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-flags=--no-watch-dog
+    ro.optimize.bcm=true
 
 # Use Awesomeplayer
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.media.use-awesome=true
 
-# Default USB mode
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    persist.sys.usb.config=mtp
-
 # Dalvik heap config
-include frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk
+include frameworks/native/build/phone-hdpi-512-dalvik-heap.mk
 
-# Texture config.
-include frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk
-
-$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/config/config-bcm.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
-
-PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
-PRODUCT_NAME := full_kyleprods
-PRODUCT_DEVICE := kyleprods
-PRODUCT_MODEL := GT-S7582
+$(call inherit-product, hardware/broadcom/wlan/bcmdhd/config/config-bcm.mk)
