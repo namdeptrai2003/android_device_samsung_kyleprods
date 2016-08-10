@@ -12,12 +12,12 @@ PRODUCT_COPY_FILES += \
 
 # Init files
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/rootdir/fstab.hawaii_ss_kylepro:root/fstab.hawaii_ss_kylepro \
+    $(LOCAL_PATH)/rootdir/fstab.hawaii_ss_kyleprods:root/fstab.hawaii_ss_kyleprods \
     $(LOCAL_PATH)/rootdir/init.rc:root/init.rc \
-    $(LOCAL_PATH)/rootdir/init.hawaii_ss_kylepro.rc:root/init.hawaii_ss_kylepro.rc \
+    $(LOCAL_PATH)/rootdir/init.hawaii_ss_kyleprods.rc:root/init.hawaii_ss_kyleprods.rc \
     $(LOCAL_PATH)/rootdir/init.bcm2166x.usb.rc:root/init.bcm2166x.usb.rc \
     $(LOCAL_PATH)/rootdir/init.log.rc:root/init.log.rc \
-    $(LOCAL_PATH)/rootdir/ueventd.hawaii_ss_kylepro.rc:root/ueventd.hawaii_ss_kylepro.rc
+    $(LOCAL_PATH)/rootdir/ueventd.hawaii_ss_kyleprods.rc:root/ueventd.hawaii_ss_kyleprods.rc
 
 # Google's Software Decoder.
 PRODUCT_COPY_FILES += \
@@ -28,7 +28,6 @@ PRODUCT_COPY_FILES += \
 # Configs
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml
-    $(LOCAL_PATH)/configs/media_codecs_ffmpeg.xml:system/etc/media_codecs_ffmpeg.xml
 
 # Insecure ADB
 ADDITIONAL_DEFAULT_PROPERTIES += \
@@ -110,8 +109,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \
     mobiledata.interfaces=rmnet0 \
     ro.telephony.ril_class=SamsungBCMRIL \
-    persist.radio.multisim.config=none \
-    ro.multisim.simslotcount=1 \
+    persist.radio.multisim.config=dsds \
+    ro.multisim.simslotcount=2 \
     cm.updater.uri=http://ota.sandpox.org/api \
     ro.telephony.call_ring.multiple=0 \
     camera2.portability.force_api=1 \
