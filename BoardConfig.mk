@@ -34,7 +34,11 @@ else
     TARGET_KERNEL_CONFIG                    := bcm21664_hawaii_ss_kyleprods_rev00_cyanogenmod_defconfig
 endif
 TARGET_KERNEL_SOURCE                        := kernel/samsung/kyleproxx
-TARGET_KERNEL_CUSTOM_TOOLCHAIN              := arm-eabi-4.6
+TARGET_KERNEL_CUSTOM_TOOLCHAIN              := arm-eabi-4.7
+
+# Extended filesystem support
+TARGET_KERNEL_HAVE_EXFAT                    := true
+TARGET_KERNEL_HAVE_NTFS                     := true
 
 # Partition size
 BOARD_BOOTIMAGE_PARTITION_SIZE              := 8388608
@@ -96,9 +100,6 @@ TARGET_FORCE_HWC_FOR_VIRTUAL_DISPLAYS       := true
 # External apps on SD
 TARGET_EXTERNAL_APPS                        := sdcard1
 
-# Include an expanded selection of fonts
-EXTENDED_FONT_FOOTPRINT                     := true
-
 # OpenGL
 BOARD_USES_HWCOMPOSER                       := true
 BOARD_USE_BGRA_8888                         := true
@@ -126,8 +127,6 @@ else
     TARGET_RECOVERY_FSTAB                   := device/samsung/kyleprods/rootdir/fstab.hawaii_ss_kyleprods
 endif
 TARGET_USE_CUSTOM_LUN_FILE_PATH             := /sys/class/android_usb/android0/f_mass_storage/lun/file
-BOARD_HAS_NO_SELECT_BUTTON                  := true
-BOARD_HAS_LARGE_FILESYSTEM                  := true
 TARGET_USERIMAGES_USE_EXT4                  := true
 TARGET_RECOVERY_PIXEL_FORMAT                := BGRA_8888
 BOARD_HAS_NO_MISC_PARTITION                 := true
@@ -164,12 +163,8 @@ BOARD_VOLD_MAX_PARTITIONS                   := 19
 # MTP
 BOARD_MTP_DEVICE                            := /dev/mtp_usb
 
-# CMHW
-BOARD_HARDWARE_CLASS                        := hardware/samsung/cmhw/
-
 # GPS
 TARGET_SPECIFIC_HEADER_PATH                 := device/samsung/kyleprods/include
 
 # SELinux
-BOARD_SEPOLICY_DIRS += \
-    device/samsung/kyleprods/sepolicy
+BOARD_SEPOLICY_DIRS += device/samsung/kyleprods/sepolicy
