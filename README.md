@@ -1,4 +1,4 @@
-# CM-13.0 Device tree for Samsung GT-S7582 (kyleprods)
+# AOSP 6.0 device tree for Samsung GT-S7582 (kyleprods)
 
 ### Specs (Physically inspected):
   - CPU: Cortex-A9 (Little endian, Dual Core)
@@ -19,13 +19,19 @@
   - WIFI/Bluetooth/FM-Radio: BCM4330
 
 ### Notice:
-  - Apply patch *PATCH_CM-13.0.diff* to root directory of CM-13.0 source code before build
+  - Run these commands while you are on the root directory of AOSP 6.0 source code to patch it before building the ROM:
+    ```sh
+    chmod +x device/samsung/kyleprods/patch
+    device/samsung/kyleprods/patch
+    patch -p1 < device/samsung/kyleprods/AOSP\ 6.0\ patches.diff
+    patch -p1 < device/samsung/kyleprods/misc/*.patch
+    ```
 
-### Other resource:
-  - Kernel source: https://github.com/SandPox/android_kernel_samsung_kyleproxx
-  - Vendor blobs: https://github.com/SandPox/android_vendor_samsung_kyleproxx
+### Other resources:
+  - Kernel source: https://github.com/Samsung-KYLEPROXX/android_kernel_samsung_kyleproxx/tree/cm-13.0
+  - Vendor blobs: https://github.com/TheComputerGuy96/android_vendor_samsung_kyleproxx/tree/aosp-6.0
 
-### More Information:
+### More information:
 ```sh
 $ cat /proc/cpuinfo
 Processor       : ARMv7 Processor rev 0 (v7l)                    
@@ -71,9 +77,12 @@ mmcblk0p18: 0000f000 00000400 "HIDDEN"
 mmcblk0p19: 00470000 00000400 "userdata"
 ```
 
-### Credits (Sort by alphabetical order):
-  - Ishant Vivek
-  - Pawitp
-  - The CyanogenMod Team
+### Thanks to:
+  - ishantvivek
+  - pawitp
+  - CyanogenMod
   - TheNikiz
-  - Zim555
+  - ZIM555
+  - ghsr
+  - SandPox
+  - sostk
