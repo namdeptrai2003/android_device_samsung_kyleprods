@@ -63,10 +63,6 @@ PRODUCT_PACKAGES += \
     ebtables \
     ethertypes
 
-# Optimization-ART
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.optimize.bcm=true
-
 # Snap Camera
 PRODUCT_PACKAGES += \
     Snap
