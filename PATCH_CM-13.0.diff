@@ -2238,3 +2238,21 @@ diff -ur a/frameworks/av/media/libstagefright/MediaBufferGroup.cpp b/frameworks/
 -}
 +}
 \ No newline at end of file     
+--- a/packages/apps/Settings/res/xml/button_settings.xml
++++ b/packages/apps/Settings/res/xml/button_settings.xml
+@@ -22,7 +22,7 @@
+         android:key="disable_nav_keys"
+         android:title="@string/disable_navkeys_title"
+         android:summary="@string/disable_navkeys_summary"
+-        android:defaultValue="false" />
++        android:defaultValue="true" />
+ 
+     <com.android.settings.cyanogenmod.ButtonBacklightBrightness
+         android:key="button_backlight"
+@@ -266,4 +266,4 @@
+             android:summary="@string/swap_volume_buttons_summary" />
+     </PreferenceCategory>
+ 
+-</PreferenceScreen>
++</PreferenceScreen>
+\ No newline at end of file
