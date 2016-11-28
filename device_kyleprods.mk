@@ -84,10 +84,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PACKAGES += \
     CMActions
 
-#Optimization-ART
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.optimize.bcm=true
-
 # Wi-Fi
 PRODUCT_PACKAGES += \
     macloader \
