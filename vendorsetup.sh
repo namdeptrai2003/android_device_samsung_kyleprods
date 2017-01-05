@@ -1,1 +1,1 @@
-add_lunch_combo aosp_kyleprods-userdebug
+add_lunch_combo omni_kyleprods-userdebug
