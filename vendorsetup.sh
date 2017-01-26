@@ -1,3 +1,3 @@
-add_lunch_combo xosp_kyleprods-user
-add_lunch_combo xosp_kyleprods-userdebug
-add_lunch_combo xosp_kyleprods-eng
+add_lunch_combo hexagon_kyleprods-user
+add_lunch_combo hexagon_kyleprods-userdebug
+add_lunch_combo hexagon_kyleprods-eng
