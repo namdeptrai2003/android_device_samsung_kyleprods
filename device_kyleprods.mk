@@ -1,8 +1,8 @@
 $(call inherit-product, vendor/samsung/kyleproxx/kyleproxx-common-vendor.mk)
 
-PRODUCT_LOCALES += hdpi
-PRODUCT_AAPT_CONFIG := normal hdpi xhdpi
-PRODUCT_AAPT_PREF_CONFIG := hdpi
+PRODUCT_LOCALES += mdpi
+PRODUCT_AAPT_CONFIG := normal mdpi mdpi
+PRODUCT_AAPT_PREF_CONFIG := mdpi
 
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
