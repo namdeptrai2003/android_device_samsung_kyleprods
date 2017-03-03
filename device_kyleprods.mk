@@ -79,10 +79,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Gello
 
-# Themes 
-PRODUCT_PACKAGES +=\
-    HexoLibre
-
 # Recorder
 PRODUCT_PACKAGES += \
     Recorder
