@@ -840,20 +840,7 @@ diff -ur a/packages/services/Telephony/res/values/cm_strings.xml b/packages/serv
 diff -ur a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java
 --- a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2017-03-03 12:07:23.664000000 +0000
 +++ b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2017-03-03 12:24:59.980000000 +0000
-@@ -830,6 +830,12 @@
-                 case Phone.NT_MODE_LTE_TDSCDMA_GSM_WCDMA:
-                 case Phone.NT_MODE_TDSCDMA_CDMA_EVDO_GSM_WCDMA:
-                 case Phone.NT_MODE_LTE_TDSCDMA_CDMA_EVDO_GSM_WCDMA:
-+                case Phone.NT_MODE_WCDMA_ONLY:
-+                case Phone.NT_MODE_GSM_UMTS:
-+                case Phone.NT_MODE_EVDO_NO_CDMA:
-+                case Phone.NT_MODE_GLOBAL:
-+                case Phone.NT_MODE_LTE_ONLY:
-+                case Phone.NT_MODE_LTE_WCDMA:
-                     // This is one of the modes we recognize
-                     break;
-                 default:
-@@ -1072,61 +1078,56 @@
+@@ -1160,61 +1160,56 @@
                  mButtonEnabledNetworks.setSummary(R.string.network_3G);
                  break;
              case Phone.NT_MODE_WCDMA_ONLY:
@@ -948,7 +935,7 @@ diff -ur a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettin
                  break;
              case Phone.NT_MODE_TDSCDMA_CDMA_EVDO_GSM_WCDMA:
                  mButtonEnabledNetworks.setValue(
-@@ -1134,16 +1135,24 @@
+@@ -1222,16 +1217,24 @@
                  mButtonEnabledNetworks.setSummary(R.string.network_3G);
                  break;
              case Phone.NT_MODE_CDMA:
