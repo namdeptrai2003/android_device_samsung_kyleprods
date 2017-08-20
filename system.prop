@@ -39,3 +39,6 @@ ro.ril.gprsclass=10
 ro.sys.fw.bg_apps_limit=8
 ro.config.low_ram=true
 persist.sys.force_highendgfx=true
+
+  #OTA Hexagon
+  hex.updater.uri=https://raw.githubusercontent.com/HexagonRom/HexUpdate_API/hex-7.1/kyleprods.json
